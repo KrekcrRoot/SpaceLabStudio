@@ -24,8 +24,18 @@ namespace SpaceLab {
         {
             renderer->beginFrame();
 
-            renderer->drawLine({0, 0}, {1280, 720});
-            renderer->drawLine({0, 720}, {1280, 0});
+            renderer->drawGradientLine({
+                0, 720.f / 2,
+                1280, 720.f / 2
+            }, {0.f, 0.f, 1.f}, {1.f, 0.f, 0.f});
+
+            renderer->drawGradientLine({
+                1280.f / 2, 0,
+                1280.f / 2, 720
+            }, {0.f, 1.f, 0.f}, {1.f, 0.f, 1.f});
+
+            renderer->drawLine({0, 0}, {1280, 720}, {1.f, 0.f, 0.f});
+            renderer->drawLine({0, 720}, {1280, 0}, {0.f, 1.f, 0.f});
 
             renderer->endFrame();
 

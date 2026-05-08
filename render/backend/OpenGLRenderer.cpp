@@ -34,20 +34,45 @@ void main() {
  * */
 
 namespace SpaceLab {
+
+    void OpenGLRenderer::drawRawLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) {
+        m_lineVertexBuffer.push_back(pos.x);
+        m_lineVertexBuffer.push_back(pos.y);
+        m_lineVertexBuffer.push_back(fromColor.x);
+        m_lineVertexBuffer.push_back(fromColor.y);
+        m_lineVertexBuffer.push_back(fromColor.z);
+
+        m_lineVertexBuffer.push_back(pos.z);
+        m_lineVertexBuffer.push_back(pos.w);
+        m_lineVertexBuffer.push_back(toColor.x);
+        m_lineVertexBuffer.push_back(toColor.y);
+        m_lineVertexBuffer.push_back(toColor.z);
+    }
+
     void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to) {
         float r = 1.f, g = 1.f, b = 1.f;
 
-        m_lineVertexBuffer.push_back(from.x);
-        m_lineVertexBuffer.push_back(from.y);
-        m_lineVertexBuffer.push_back(r);
-        m_lineVertexBuffer.push_back(g);
-        m_lineVertexBuffer.push_back(b);
+        this->drawRawLine({
+            from.x, from.y,
+            to.x, to.y
+        }, {r, g, b}, {r, g, b});
+    }
 
-        m_lineVertexBuffer.push_back(to.x);
-        m_lineVertexBuffer.push_back(to.y);
-        m_lineVertexBuffer.push_back(r);
-        m_lineVertexBuffer.push_back(g);
-        m_lineVertexBuffer.push_back(b);
+    void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color) {
+        float r = color.x, g = color.y, b = color.z;
+
+        this->drawRawLine({
+            from.x, from.y,
+            to.x, to.y
+        }, {r, g, b}, {r, g, b});
+    }
+
+    void OpenGLRenderer::drawGradientLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) {
+        this->drawRawLine(pos, {
+            fromColor.x, fromColor.y, fromColor.z
+        }, {
+            toColor.x, toColor.y, toColor.z
+        });
     }
 }
 

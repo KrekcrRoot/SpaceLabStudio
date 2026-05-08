@@ -20,7 +20,13 @@ namespace SpaceLab {
 
         void init(void *nativeWindow) override;
 
+
+        // LINES
+        void drawRawLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor);
         void drawLine(Vector2<float> from, Vector2<float> to) override;
+        void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color) override;
+        void drawGradientLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) override;
+
 
         void beginFrame() override;
         void endFrame() override;
