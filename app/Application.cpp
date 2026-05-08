@@ -24,6 +24,9 @@ namespace SpaceLab {
         {
             renderer->beginFrame();
 
+            renderer->drawLine({0, 0}, {1280, 720});
+            renderer->drawLine({0, 720}, {1280, 0});
+
             renderer->endFrame();
 
             /* Swap front and back buffers */

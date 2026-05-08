@@ -11,6 +11,8 @@ SpaceLab::Window::Window(int width, int height, const std::string &title) {
         throw std::runtime_error("Failed to init GLFW");
     }
 
+    glfwWindowHint(GLFW_SAMPLES, 4);
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 

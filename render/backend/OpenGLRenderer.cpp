@@ -29,7 +29,47 @@ void main() {
 }
 )glsl";
 
+/*
+ * OpenGLRenderer Geometric Functions
+ * */
+
 namespace SpaceLab {
+    void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to) {
+        float r = 1.f, g = 1.f, b = 1.f;
+
+        m_lineVertexBuffer.push_back(from.x);
+        m_lineVertexBuffer.push_back(from.y);
+        m_lineVertexBuffer.push_back(r);
+        m_lineVertexBuffer.push_back(g);
+        m_lineVertexBuffer.push_back(b);
+
+        m_lineVertexBuffer.push_back(to.x);
+        m_lineVertexBuffer.push_back(to.y);
+        m_lineVertexBuffer.push_back(r);
+        m_lineVertexBuffer.push_back(g);
+        m_lineVertexBuffer.push_back(b);
+    }
+}
+
+namespace SpaceLab {
+
+    static GLuint compileShader(GLenum type, const char* src) {
+        GLuint shader = glCreateShader(type);
+        glShaderSource(shader, 1, &src, nullptr);
+        glCompileShader(shader);
+
+        GLint success;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if(!success) {
+            char infoLog[512];
+            glGetShaderInfoLog(shader, 512, nullptr, infoLog);
+            std::cerr << "Shader compile error: " << infoLog << std::endl;
+            glDeleteShader(shader);
+            return 0;
+        }
+
+        return shader;
+    }
 
     void OpenGLRenderer::init(void *handle) {
 
@@ -44,6 +84,12 @@ namespace SpaceLab {
             throw std::runtime_error("Failed to init GLAD");
         }
 
+        glEnable(GL_MULTISAMPLE);
+        glEnable(GL_LINE_SMOOTH);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
         glfwGetFramebufferSize(m_window, &m_width, &m_height);
         glViewport(0, 0, m_width, m_height);
 
@@ -57,23 +103,86 @@ namespace SpaceLab {
                   << m_width << "x" << m_height << ")" << std::endl;
     }
 
-    void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to) {
+    void OpenGLRenderer::setupShaders() {
+        GLuint vert = compileShader(GL_VERTEX_SHADER, vertexShaderSrc);
+        GLuint frag = compileShader(GL_FRAGMENT_SHADER, fragmentShaderSrc);
+        m_shaderProgram = glCreateProgram();
+        glAttachShader(m_shaderProgram, vert);
+        glAttachShader(m_shaderProgram, frag);
+        glLinkProgram(m_shaderProgram);
+
+        GLint success;
+        glGetProgramiv(m_shaderProgram, GL_LINK_STATUS, &success);
+        if (!success) {
+            char infoLog[512];
+            glGetProgramInfoLog(m_shaderProgram, 512, nullptr, infoLog);
+            std::cerr << "Program link error: " << infoLog << std::endl;
+        }
+
+        glDeleteShader(vert);
+        glDeleteShader(frag);
+    }
+
+    void OpenGLRenderer::setupBuffers() {
+
+        glGenVertexArrays(1, &m_VAO);
+        glGenBuffers(1, &m_VBO);
+
+        glBindVertexArray(m_VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+
+        glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                              (void*)(2 * sizeof(float)));
+
+        glEnableVertexAttribArray(1);
+        glBindVertexArray(0);
 
     }
 
     void OpenGLRenderer::beginFrame() {
 
-        glClearColor(0.19f, 0.18f, 0.13f, 1.0f);
+        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+
+        m_lineVertexBuffer.clear();
 
     }
 
-    void OpenGLRenderer::endFrame() {}
+    void OpenGLRenderer::endFrame() {
+        flush();
+    }
 
-    void OpenGLRenderer::flush() {}
+    void OpenGLRenderer::flush() {
+
+        if(m_lineVertexBuffer.empty()) return;
+
+        glUseProgram(m_shaderProgram);
+        GLint projLoc = glGetUniformLocation(m_shaderProgram, "uProjection");
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_projection));
+
+        glBindVertexArray(m_VAO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+        glBufferData(GL_ARRAY_BUFFER,
+                     static_cast<GLsizeiptr>(m_lineVertexBuffer.size() * sizeof (float)),
+                     m_lineVertexBuffer.data(),
+                     GL_DYNAMIC_DRAW);
+
+        auto vertexCount = static_cast<GLsizei>(m_lineVertexBuffer.size() / 5);
+        glLineWidth(2.0f);
+        glDrawArrays(GL_LINES, 0, vertexCount);
+
+        glBindVertexArray(0);
+        glUseProgram(0);
+
+    }
 
     OpenGLRenderer::~OpenGLRenderer() {
-
-    };
+        if (m_shaderProgram) glDeleteProgram(m_shaderProgram);
+        if (m_VAO) glDeleteVertexArrays(1, &m_VAO);
+        if (m_VBO) glDeleteBuffers(1, &m_VBO);
+    }
 
 }

@@ -27,8 +27,8 @@ namespace SpaceLab {
 
     private:
         void flush() override;
-        void setupShaders() {};
-        void setupBuffers() {};
+        void setupShaders();
+        void setupBuffers();
 
         GLFWwindow* m_window = nullptr;
         int m_width = 1280;
