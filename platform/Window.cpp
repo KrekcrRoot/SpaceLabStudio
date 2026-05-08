@@ -10,8 +10,10 @@ SpaceLab::Window::Window(int width, int height, const std::string &title) {
         throw std::runtime_error("Failed to init GLFW");
     }
 
-    glfwWindowHint(GLFW_SAMPLES, 4);
-    glfwSwapInterval(1);
+//    glfwWindowHint(GLFW_COCOA_RETINA_FRAMEBUFFER, GLFW_FALSE);
+    glfwWindowHint(GLFW_SAMPLES, 8);
+    glfwSwapInterval(-1);
+    glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);

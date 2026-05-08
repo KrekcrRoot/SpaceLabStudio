@@ -123,6 +123,7 @@ namespace SpaceLab {
 
         setupShaders();
         setupBuffers();
+        m_lineVertexBuffer.reserve(10000);
 
         std::cout << "[OpenGLRenderer] Initialized ("
                   << m_width << "x" << m_height << ")" << std::endl;

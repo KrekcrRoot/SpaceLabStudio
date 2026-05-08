@@ -8,4 +8,4 @@ target_include_directories(app
         ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-target_link_libraries(app PUBLIC render)
+target_link_libraries(app PUBLIC render ui)

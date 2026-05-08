@@ -8,6 +8,7 @@
 #include <Renderer.h>
 #include <Camera.h>
 #include <Window.h>
+#include <workspace/InfiniteGrid.h>
 
 namespace SpaceLab {
     class Application {
@@ -20,10 +21,14 @@ namespace SpaceLab {
 
     private:
         bool m_leftBtnDown = false;
+        void handleInput();
 
         Camera      *m_camera;
         Renderer    *m_renderer;
         Window      *m_window;
+
+        // workspace
+        ui::InfiniteGrid m_infiniteGrid;
 
     };
 }

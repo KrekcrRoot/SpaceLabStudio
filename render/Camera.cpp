@@ -36,7 +36,8 @@ namespace SpaceLab {
     }
 
     void Camera::push(float x, float y) {
-        m_position += glm::vec2(x, y);
+        float speed = 3.f;
+        m_targetPosition += glm::vec2(x * speed, y * speed);
     }
 
     void Camera::update(float deltaTime) {
@@ -44,5 +45,25 @@ namespace SpaceLab {
         m_position = glm::mix(m_position, m_targetPosition, lerpFactor);
     }
 
+
+    float Camera::left() const {
+        float halfW = m_viewWidth * 0.5f * m_zoom;
+        return m_position.x - halfW;
+    }
+
+    float Camera::right() const {
+        float halfW = m_viewWidth * 0.5f * m_zoom;
+        return m_position.x + halfW;
+    }
+
+    float Camera::top() const {
+        float halfH = m_viewHeight * 0.5f * m_zoom;
+        return m_position.y - halfH;
+    }
+
+    float Camera::bottom() const {
+        float halfH = m_viewHeight * 0.5f * m_zoom;
+        return m_position.y + halfH;
+    }
 
 }

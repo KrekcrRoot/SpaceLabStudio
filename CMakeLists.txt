@@ -18,6 +18,7 @@ add_subdirectory(render)
 add_subdirectory(app)
 add_subdirectory(platform)
 add_subdirectory(math)
+add_subdirectory(ui)
 
 
 add_executable(SpaceLabStudio main.cpp third_party/glad/src/glad.c)
@@ -28,6 +29,7 @@ target_link_libraries(SpaceLabStudio
     platform
     glfw
     math
+    ui
 )
 
 target_include_directories(SpaceLabStudio PRIVATE

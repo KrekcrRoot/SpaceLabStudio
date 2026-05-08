@@ -23,13 +23,18 @@ namespace SpaceLab {
 
         void setTargetPosition(const glm::vec2& pos);
 
+        [[nodiscard]] float top() const;
+        [[nodiscard]] float left() const;
+        [[nodiscard]] float bottom() const;
+        [[nodiscard]] float right() const;
+
     private:
         glm::vec2 m_targetPosition {};
         glm::vec2 m_position {};
 
 
         float m_zoom = 1.f;
-        float m_smoothness = 16.0f;
+        float m_smoothness = 8.0f;
         float m_viewWidth = 1280.f, m_viewHeight = 720.f;
 
 
