@@ -5,6 +5,9 @@ add_library(render
         Renderer.h
         Renderer.cpp
 
+        Camera.h
+        Camera.cpp
+
         ${RENDER_SOURCES}
         ${RENDER_HEADERS}
 

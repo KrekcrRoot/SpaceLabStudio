@@ -167,6 +167,10 @@ namespace SpaceLab {
 
     }
 
+    void OpenGLRenderer::setViewProjection(glm::mat4 projectionMatrix) {
+        m_projection = projectionMatrix;
+    }
+
     void OpenGLRenderer::beginFrame() {
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

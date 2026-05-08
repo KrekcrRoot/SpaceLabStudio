@@ -6,7 +6,7 @@
 #define SPACELABSTUDIO_APPLICATION_H
 
 #include <Renderer.h>
-
+#include <Camera.h>
 #include <Window.h>
 
 namespace SpaceLab {
@@ -19,9 +19,11 @@ namespace SpaceLab {
         void run();
 
     private:
+        bool m_leftBtnDown = false;
 
-        Renderer *renderer;
-        Window *window;
+        Camera      *m_camera;
+        Renderer    *m_renderer;
+        Window      *m_window;
 
     };
 }

@@ -6,6 +6,7 @@
 #define SPACELABSTUDIO_RENDERER_H
 
 #include <math/objects/Vectors.h>
+#include <glm/glm.hpp>
 
 using namespace math;
 
@@ -17,6 +18,7 @@ namespace SpaceLab {
 
         virtual void beginFrame() = 0;
         virtual void endFrame() = 0;
+        virtual void setViewProjection(glm::mat4 projectionMatrix) = 0;
 
         virtual void drawLine(Vector2<float> from, Vector2<float> to) = 0;
         virtual void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color) = 0;

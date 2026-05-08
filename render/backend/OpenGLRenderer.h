@@ -28,6 +28,7 @@ namespace SpaceLab {
         void drawGradientLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) override;
 
 
+        void setViewProjection(glm::mat4 projectionMatrix) override;
         void beginFrame() override;
         void endFrame() override;
 

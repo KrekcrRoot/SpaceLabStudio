@@ -3,7 +3,6 @@
 //
 
 #include "Window.h"
-//#include <iostream>
 
 SpaceLab::Window::Window(int width, int height, const std::string &title) {
 
@@ -12,6 +11,7 @@ SpaceLab::Window::Window(int width, int height, const std::string &title) {
     }
 
     glfwWindowHint(GLFW_SAMPLES, 4);
+    glfwSwapInterval(1);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
