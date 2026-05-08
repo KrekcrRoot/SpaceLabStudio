@@ -19,4 +19,5 @@ target_include_directories(render
 
 target_link_libraries(render
     platform
-    math)
+    math
+)

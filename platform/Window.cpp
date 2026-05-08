@@ -3,7 +3,7 @@
 //
 
 #include "Window.h"
-#include <iostream>
+//#include <iostream>
 
 SpaceLab::Window::Window(int width, int height, const std::string &title) {
 
@@ -24,10 +24,6 @@ SpaceLab::Window::Window(int width, int height, const std::string &title) {
     }
 
     glfwMakeContextCurrent(window);
-
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        throw std::runtime_error("Failed to init GLAD");
-    }
 
 }
 

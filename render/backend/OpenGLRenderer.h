@@ -5,15 +5,19 @@
 #ifndef SPACELABSTUDIO_OPENGLRENDERER_H
 #define SPACELABSTUDIO_OPENGLRENDERER_H
 
-//#include
-
 #include <Renderer.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 
 namespace SpaceLab {
 
     class OpenGLRenderer : public Renderer {
 
     public:
+        OpenGLRenderer() = default;
+        ~OpenGLRenderer() override;
+
         void init(void *nativeWindow) override;
 
         void drawLine(Vector2<float> from, Vector2<float> to) override;
@@ -23,6 +27,19 @@ namespace SpaceLab {
 
     private:
         void flush() override;
+        void setupShaders() {};
+        void setupBuffers() {};
+
+        GLFWwindow* m_window = nullptr;
+        int m_width = 1280;
+        int m_height = 720;
+
+        GLuint m_shaderProgram = 0;
+        GLuint m_VAO = 0;
+        GLuint m_VBO = 0;
+
+        glm::mat4 m_projection{};
+        std::vector<float> m_lineVertexBuffer;
 
     };
 

@@ -3,8 +3,8 @@
 //
 
 #include "Application.h"
-#include <GLFW/glfw3.h>
 #include <backend/OpenGLRenderer.h>
+#include <GLFW/glfw3.h>
 
 namespace SpaceLab {
 

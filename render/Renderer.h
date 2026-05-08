@@ -13,6 +13,8 @@ namespace SpaceLab {
     class Renderer {
     public:
 
+        virtual ~Renderer() = default;
+
         virtual void beginFrame() = 0;
         virtual void endFrame() = 0;
 

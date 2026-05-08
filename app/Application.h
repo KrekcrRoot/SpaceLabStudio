@@ -6,6 +6,7 @@
 #define SPACELABSTUDIO_APPLICATION_H
 
 #include <Renderer.h>
+
 #include <Window.h>
 
 namespace SpaceLab {
