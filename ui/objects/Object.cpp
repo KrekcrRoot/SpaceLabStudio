@@ -15,17 +15,19 @@ namespace SpaceLab::ui {
 
     void Object::hover() {
         m_hover = true;
+        m_outlineAlphaTarget = 0.2f;
     }
 
     void Object::leave() {
         m_hover = false;
+        m_outlineAlphaTarget = 0.f;
     }
 
     void Object::drag() {}
 
     void Object::draw(SpaceLab::Renderer *renderer) {
 
-        if(m_hover) {
+        if(m_outlineAlpha > 0) {
             drawOutline(renderer);
         }
 
@@ -33,9 +35,20 @@ namespace SpaceLab::ui {
 
     }
 
+    void Object::update(float deltaTime) {
+        if(m_outlineAlpha < m_outlineAlphaTarget) {
+            m_outlineAlpha += deltaTime * m_outlineFade;
+            if(m_outlineAlpha > m_outlineAlphaTarget) m_outlineAlpha = m_outlineAlphaTarget;
+        }
+        if(m_outlineAlpha > m_outlineAlphaTarget) {
+            m_outlineAlpha -= deltaTime * m_outlineFade;
+            if(m_outlineAlpha < m_outlineAlphaTarget) m_outlineAlpha = m_outlineAlphaTarget;
+        }
+    }
+
     void Object::drawOutline(Renderer* renderer) const {
 
-        Vector4<float> color = {1.f, 1.f, 1.f, 1.f};
+        Vector4<float> color = {1.f, 1.f, 1.f, m_outlineAlpha};
 
         renderer->drawGradientLine({
             m_position.x - m_outline, m_position.y - m_outline,

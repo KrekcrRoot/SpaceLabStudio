@@ -22,6 +22,14 @@ namespace SpaceLab {
             0, 0
         }, 100));
 
+        m_objects.push_back(new ui::NumberObject({
+            -200, 0
+        }, 100));
+
+        m_objects.push_back(new ui::NumberObject({
+            200, 0
+        }, 100));
+
     }
 
     void Application::run() {
@@ -50,6 +58,9 @@ namespace SpaceLab {
             auto worldPos = m_camera->screenToWorld(float(m_cursorPos.x), float(m_cursorPos.y));
 
             for(const auto object : m_objects) {
+
+                object->update(float(dt));
+
                 if(object->hit(worldPos)) {
                     object->hover();
 

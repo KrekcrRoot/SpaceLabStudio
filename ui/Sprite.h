@@ -16,6 +16,7 @@ namespace SpaceLab::ui {
         virtual ~Sprite() = default;
 
         [[nodiscard]] virtual bool hit(const glm::vec2& pos) const = 0;
+        virtual void update(float deltaTime) = 0;
         virtual void hover() = 0;
         virtual void leave() = 0;
         virtual void drag() = 0;
