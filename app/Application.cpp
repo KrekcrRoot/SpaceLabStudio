@@ -4,8 +4,8 @@
 
 #include "Application.h"
 #include <backend/OpenGLRenderer.h>
+#include <objects/SquareObject.h>
 #include <GLFW/glfw3.h>
-#include <cmath>
 
 namespace SpaceLab {
 
@@ -17,6 +17,9 @@ namespace SpaceLab {
 
         m_window = new Window{1280, 720, "SpaceLab Studio"};
         m_renderer->init(m_window->getNativeHandle());
+
+        for(int i=0; i < 100; ++i)
+            m_objects.push_back(new ui::SquareObject(i));
 
     }
 
@@ -41,6 +44,18 @@ namespace SpaceLab {
             m_renderer->beginFrame();
 
             m_infiniteGrid.render(m_renderer, m_camera);
+
+            glfwGetCursorPos(handler, &m_cursorPos.x, &m_cursorPos.y);
+            auto worldPos = m_camera->screenToWorld(float(m_cursorPos.x), float(m_cursorPos.y));
+
+            for(const auto object : m_objects) {
+                if(object->hit(worldPos)) {
+                    object->hover();
+                }else{
+                    object->leave();
+                }
+                object->draw(m_renderer);
+            }
 
             m_renderer->endFrame();
 
@@ -86,6 +101,10 @@ namespace SpaceLab {
         delete m_renderer;
         delete m_window;
         delete m_camera;
+
+        for(const auto& object : m_objects) {
+            delete object;
+        }
     }
 
 }

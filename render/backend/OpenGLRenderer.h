@@ -25,6 +25,7 @@ namespace SpaceLab {
         void drawRawLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor);
         void drawLine(Vector2<float> from, Vector2<float> to) override;
         void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color) override;
+        void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color, float alpha) override;
         void drawGradientLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) override;
 
 

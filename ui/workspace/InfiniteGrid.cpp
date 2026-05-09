@@ -10,19 +10,27 @@ namespace SpaceLab::ui {
 
     void InfiniteGrid::render(SpaceLab::Renderer *renderer, Camera* camera) {
 
-//        std::cout << camera->right() << "\n";
-
-        float cell = 50.f;
+        float cell = 30.f;
 
         float x = floor(camera->left() / cell) * cell;
         float y = floor(camera->top() / cell) * cell;
 
-        for(; x <= camera->right(); x += 50) {
-            renderer->drawLine({x, camera->top()}, {x, camera->bottom()}, {fmax(0.2f * sin(x * 2), 0.14f), fmax(0.2f * sin(x * 2), 0.14f), fmax(0.2f * sin(x * 2), 0.14f)});
+        float cmin = 0.2f, cmax = 0.25f;
+
+        for(; x <= camera->right(); x += cell) {
+            renderer->drawLine({x, camera->top()}, {x, camera->bottom()}, {
+                sin(x) * (cmax - cmin) / 2 + (cmin + cmax) / 2,
+                sin(x) * (cmax - cmin) / 2 + (cmin + cmax) / 2,
+                sin(x) * (cmax - cmin) / 2 + (cmin + cmax) / 2,
+            });
         }
 
-        for(; y <= camera->bottom(); y += 50) {
-            renderer->drawLine({camera->left(), y}, {camera->right(), y}, {fmax(0.2f * sin(y * 2), 0.14f), fmax(0.2f * sin(y * 2), 0.14f), fmax(0.2f * sin(y * 2), 0.14f)});
+        for(; y <= camera->bottom(); y += cell) {
+            renderer->drawLine({camera->left(), y}, {camera->right(), y}, {
+                sin(y) * (cmax - cmin) / 2 + (cmin + cmax) / 2,
+                sin(y) * (cmax - cmin) / 2 + (cmin + cmax) / 2,
+                sin(y) * (cmax - cmin) / 2 + (cmin + cmax) / 2,
+            });
         }
 
     }

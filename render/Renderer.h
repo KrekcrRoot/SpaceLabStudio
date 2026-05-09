@@ -22,6 +22,7 @@ namespace SpaceLab {
 
         virtual void drawLine(Vector2<float> from, Vector2<float> to) = 0;
         virtual void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color) = 0;
+        virtual void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color, float alpha) = 0;
         virtual void drawGradientLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) = 0;
 
         virtual void init(void *nativeWindow) = 0;

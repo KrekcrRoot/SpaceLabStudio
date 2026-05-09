@@ -9,6 +9,7 @@
 #include <Camera.h>
 #include <Window.h>
 #include <workspace/InfiniteGrid.h>
+#include <Sprite.h>
 
 namespace SpaceLab {
     class Application {
@@ -26,6 +27,9 @@ namespace SpaceLab {
         Camera      *m_camera;
         Renderer    *m_renderer;
         Window      *m_window;
+
+        std::vector<ui::Sprite*> m_objects;
+        glm::vec<2, double> m_cursorPos;
 
         // workspace
         ui::InfiniteGrid m_infiniteGrid;

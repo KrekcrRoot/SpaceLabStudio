@@ -67,6 +67,10 @@ namespace SpaceLab {
         }, {r, g, b}, {r, g, b});
     }
 
+    void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color, float alpha) {
+        float r = color.x, g = color.y, b = color.z;
+    }
+
     void OpenGLRenderer::drawGradientLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) {
         this->drawRawLine(pos, {
             fromColor.x, fromColor.y, fromColor.z
@@ -174,7 +178,7 @@ namespace SpaceLab {
 
     void OpenGLRenderer::beginFrame() {
 
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         m_lineVertexBuffer.clear();
