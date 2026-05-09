@@ -11,9 +11,9 @@
 static const char* vertexShaderSrc = R"glsl(
 #version 330 core
 layout(location = 0) in vec2 aPos;
-layout(location = 1) in vec3 aColor;
+layout(location = 1) in vec4 aColor;
 uniform mat4 uProjection;
-out vec3 vColor;
+out vec4 vColor;
 void main() {
     gl_Position = uProjection * vec4(aPos, 0.0, 1.0);
     vColor = aColor;
@@ -22,10 +22,10 @@ void main() {
 
 static const char* fragmentShaderSrc = R"glsl(
 #version 330 core
-in vec3 vColor;
+in vec4 vColor;
 out vec4 FragColor;
 void main() {
-    FragColor = vec4(vColor, 1.0);
+    FragColor = vColor;
 }
 )glsl";
 
@@ -35,18 +35,21 @@ void main() {
 
 namespace SpaceLab {
 
-    void OpenGLRenderer::drawRawLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) {
+
+    void OpenGLRenderer::drawRawLine(Vector4<float> pos, Vector4<float> fromColor, Vector4<float> toColor) {
         m_lineVertexBuffer.push_back(pos.x);
         m_lineVertexBuffer.push_back(pos.y);
         m_lineVertexBuffer.push_back(fromColor.x);
         m_lineVertexBuffer.push_back(fromColor.y);
         m_lineVertexBuffer.push_back(fromColor.z);
+        m_lineVertexBuffer.push_back(fromColor.w);
 
         m_lineVertexBuffer.push_back(pos.z);
         m_lineVertexBuffer.push_back(pos.w);
         m_lineVertexBuffer.push_back(toColor.x);
         m_lineVertexBuffer.push_back(toColor.y);
         m_lineVertexBuffer.push_back(toColor.z);
+        m_lineVertexBuffer.push_back(toColor.w);
     }
 
     void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to) {
@@ -64,19 +67,21 @@ namespace SpaceLab {
         this->drawRawLine({
             from.x, from.y,
             to.x, to.y
-        }, {r, g, b}, {r, g, b});
+        }, {r, g, b, 1.f}, {r, g, b, 1.f});
     }
+
 
     void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color, float alpha) {
         float r = color.x, g = color.y, b = color.z;
+
+        this->drawRawLine({
+            from.x, from.y,
+            to.x, to.y
+        }, {r, g, b, alpha}, {r, g, b, alpha});
     }
 
-    void OpenGLRenderer::drawGradientLine(Vector4<float> pos, Vector3<float> fromColor, Vector3<float> toColor) {
-        this->drawRawLine(pos, {
-            fromColor.x, fromColor.y, fromColor.z
-        }, {
-            toColor.x, toColor.y, toColor.z
-        });
+    void OpenGLRenderer::drawGradientLine(Vector4<float> pos, Vector4<float> fromColor, Vector4<float> toColor) {
+        this->drawRawLine(pos, fromColor, toColor);
     }
 }
 
@@ -162,9 +167,9 @@ namespace SpaceLab {
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
 
         glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
-        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
                               (void*)(2 * sizeof(float)));
 
         glEnableVertexAttribArray(1);
@@ -204,7 +209,7 @@ namespace SpaceLab {
                      m_lineVertexBuffer.data(),
                      GL_DYNAMIC_DRAW);
 
-        auto vertexCount = static_cast<GLsizei>(m_lineVertexBuffer.size() / 5);
+        auto vertexCount = static_cast<GLsizei>(m_lineVertexBuffer.size() / 6);
         glLineWidth(2.0f);
         glDrawArrays(GL_LINES, 0, vertexCount);
 

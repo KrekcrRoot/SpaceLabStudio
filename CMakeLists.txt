@@ -13,6 +13,7 @@ set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 add_subdirectory(third_party/glfw)
 
 include_directories(third_party/glm)
+include_directories(third_party/stb)
 
 add_subdirectory(render)
 add_subdirectory(app)
@@ -35,4 +36,5 @@ target_link_libraries(SpaceLabStudio
 target_include_directories(SpaceLabStudio PRIVATE
     third_party/glad/include
     third_party/glm
+    third_party/stb
 )

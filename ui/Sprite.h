@@ -18,7 +18,9 @@ namespace SpaceLab::ui {
         [[nodiscard]] virtual bool hit(const glm::vec2& pos) const = 0;
         virtual void hover() = 0;
         virtual void leave() = 0;
+        virtual void drag() = 0;
 
+        bool m_drag = false;
         bool m_hover = false;
 
     private:

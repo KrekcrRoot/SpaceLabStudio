@@ -4,7 +4,7 @@
 
 #include "Application.h"
 #include <backend/OpenGLRenderer.h>
-#include <objects/SquareObject.h>
+#include <objects/NumberObject.h>
 #include <GLFW/glfw3.h>
 
 namespace SpaceLab {
@@ -18,8 +18,9 @@ namespace SpaceLab {
         m_window = new Window{1280, 720, "SpaceLab Studio"};
         m_renderer->init(m_window->getNativeHandle());
 
-        for(int i=0; i < 100; ++i)
-            m_objects.push_back(new ui::SquareObject(i));
+        m_objects.push_back(new ui::NumberObject({
+            0, 0
+        }, 100));
 
     }
 
@@ -51,6 +52,10 @@ namespace SpaceLab {
             for(const auto object : m_objects) {
                 if(object->hit(worldPos)) {
                     object->hover();
+
+                    if(m_leftBtnDown) {
+                        object->drag();
+                    }
                 }else{
                     object->leave();
                 }
@@ -90,6 +95,10 @@ namespace SpaceLab {
             glfwGetCursorPos(window, &mx, &my);
             auto worldPos = m_camera->screenToWorld(float(mx), float(my));
             m_camera->setTargetPosition(worldPos);
+        }
+
+        if(leftDown && m_leftBtnDown) {
+
         }
 
         m_leftBtnDown = leftDown;
