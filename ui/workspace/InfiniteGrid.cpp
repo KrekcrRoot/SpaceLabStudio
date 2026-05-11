@@ -14,7 +14,7 @@ namespace SpaceLab::ui {
         backgroundColor.z *= 1.3;
     }
 
-    void InfiniteGrid::render(SpaceLab::Renderer *renderer, Camera* camera) {
+    void InfiniteGrid::render(render::Renderer *renderer, render::Camera* camera) const {
 
         float cell = 50.f;
 

@@ -14,7 +14,7 @@ namespace SpaceLab::ui {
 
     public:
         InfiniteGrid();
-        void render(Renderer* renderer, Camera* camera);
+        void render(render::Renderer* renderer, render::Camera* camera) const;
 
     private:
 

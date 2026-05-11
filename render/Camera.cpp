@@ -4,7 +4,7 @@
 
 #include "Camera.h"
 
-namespace SpaceLab {
+namespace SpaceLab::render {
 
     Camera::Camera(float viewWidth, float viewHeight) : m_viewWidth(viewWidth), m_viewHeight(viewHeight) {}
 

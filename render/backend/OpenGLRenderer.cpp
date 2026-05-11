@@ -29,11 +29,34 @@ void main() {
 }
 )glsl";
 
+static const char* texVertexSrc = R"glsl(
+#version 330 core
+layout(location = 0) in vec2 aPos;
+layout(location = 1) in vec2 aTexCoord;
+uniform mat4 uProjection;
+out vec2 vTexCoord;
+void main() {
+    gl_Position = uProjection * vec4(aPos, 0.0, 1.0);
+    vTexCoord = aTexCoord;
+}
+)glsl";
+
+static const char* texFragmentSrc = R"glsl(
+#version 330 core
+in vec2 vTexCoord;
+out vec4 FragColor;
+uniform sampler2D uTexture;
+void main() {
+    float alpha = texture(uTexture, vTexCoord).r;
+    FragColor = vec4(1.0, 1.0, 1.0, alpha); // белый цвет, альфа из текстуры
+}
+)glsl";
+
 /*
  * OpenGLRenderer Geometric Functions
  * */
 
-namespace SpaceLab {
+namespace SpaceLab::render {
 
 
     void OpenGLRenderer::drawRawLine(Vector4<float> pos, Vector4<float> fromColor, Vector4<float> toColor) {
@@ -83,9 +106,28 @@ namespace SpaceLab {
     void OpenGLRenderer::drawGradientLine(Vector4<float> pos, Vector4<float> fromColor, Vector4<float> toColor) {
         this->drawRawLine(pos, fromColor, toColor);
     }
+
+    void OpenGLRenderer::drawString(const font::Font &font, const std::string &str, Vector2<float> pos) {
+
+        GLuint fontTex = font.getTexture();
+        // Если текстура сменилась – сбрасываем старый батч
+        if (fontTex != m_currentTexture) {
+            flushText();
+            m_currentTexture = fontTex;
+        }
+
+        std::vector<float> verts;
+        font.buildString(str, pos, verts);
+        if (verts.empty()) return;
+
+        // Просто добавляем в накопитель
+        m_texVertices.insert(m_texVertices.end(), verts.begin(), verts.end());
+
+
+    }
 }
 
-namespace SpaceLab {
+namespace SpaceLab::render {
 
     static GLuint compileShader(GLenum type, const char* src) {
         GLuint shader = glCreateShader(type);
@@ -103,6 +145,33 @@ namespace SpaceLab {
         }
 
         return shader;
+    }
+
+    void OpenGLRenderer::setupTexShaders() {
+        GLuint vert = compileShader(GL_VERTEX_SHADER, texVertexSrc);
+        GLuint frag = compileShader(GL_FRAGMENT_SHADER, texFragmentSrc);
+        m_shaderTexProgram = glCreateProgram();
+        glAttachShader(m_shaderTexProgram, vert);
+        glAttachShader(m_shaderTexProgram, frag);
+        glLinkProgram(m_shaderTexProgram);
+        // проверка ошибок link...
+        glDeleteShader(vert);
+        glDeleteShader(frag);
+    }
+
+    void OpenGLRenderer::setupTexBuffers() {
+        glGenVertexArrays(1, &m_VAOtex);
+        glGenBuffers(1, &m_VBOtex);
+        glBindVertexArray(m_VAOtex);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBOtex);
+        glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
+        // Позиция (location = 0) – 2 float
+        glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+        glEnableVertexAttribArray(0);
+        // UV (location = 1) – 2 float (смещение на 2 float)
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+        glEnableVertexAttribArray(1);
+        glBindVertexArray(0);
     }
 
     void OpenGLRenderer::init(void *handle) {
@@ -132,6 +201,8 @@ namespace SpaceLab {
 
         setupShaders();
         setupBuffers();
+        setupTexShaders();
+        setupTexBuffers();
         m_lineVertexBuffer.reserve(10000);
 
         std::cout << "[OpenGLRenderer] Initialized ("
@@ -188,11 +259,14 @@ namespace SpaceLab {
         glClear(GL_COLOR_BUFFER_BIT);
 
         m_lineVertexBuffer.clear();
+        m_texVertices.clear();
+        m_currentTexture = 0;
 
     }
 
     void OpenGLRenderer::endFrame() {
         flush();
+        flushText();
     }
 
     void OpenGLRenderer::flush() {
@@ -217,6 +291,35 @@ namespace SpaceLab {
         glBindVertexArray(0);
         glUseProgram(0);
 
+    }
+
+    void OpenGLRenderer::flushText() {
+        if (m_texVertices.empty() || m_currentTexture == 0) return;
+
+//        std::cout << "Binding texture ID: " << m_currentTexture << std::endl;
+
+        glUseProgram(m_shaderTexProgram);
+        GLint projLoc = glGetUniformLocation(m_shaderTexProgram, "uProjection");
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(m_projection));
+        glUniform1i(glGetUniformLocation(m_shaderTexProgram, "uTexture"), 0);
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, m_currentTexture);
+
+        glBindVertexArray(m_VAOtex);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBOtex);
+        glBufferData(GL_ARRAY_BUFFER,
+                     m_texVertices.size() * sizeof(float),
+                     m_texVertices.data(), GL_DYNAMIC_DRAW);
+
+//        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDrawArrays(GL_TRIANGLES, 0, static_cast<GLsizei>(m_texVertices.size() / 4));
+//        glDisable(GL_BLEND);
+
+        glBindVertexArray(0);
+        glUseProgram(0);
+        m_texVertices.clear();
     }
 
     OpenGLRenderer::~OpenGLRenderer() {

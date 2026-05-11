@@ -12,7 +12,7 @@ namespace SpaceLab::ui {
     class Sprite {
 
     public:
-        virtual void draw(Renderer* renderer) = 0;
+        virtual void draw(render::Renderer* renderer) = 0;
         virtual ~Sprite() = default;
 
         [[nodiscard]] virtual bool hit(const glm::vec2& pos) const = 0;
@@ -22,6 +22,7 @@ namespace SpaceLab::ui {
         virtual void drag(const glm::vec2& delta) = 0;
         virtual void drop() = 0;
         virtual bool dragging() = 0;
+        virtual bool hovering() = 0;
 
         bool m_dragging = false;
         bool m_hover = false;

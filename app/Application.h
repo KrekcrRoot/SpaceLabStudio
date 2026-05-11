@@ -26,8 +26,8 @@ namespace SpaceLab {
         void handleInput();
         static void scrollCallback(GLFWwindow* window, double x, double y);
 
-        Camera      *m_camera;
-        Renderer    *m_renderer;
+        render::Camera      *m_camera;
+        render::Renderer    *m_renderer;
         Window      *m_window;
 
         std::vector<ui::Sprite*> m_objects;

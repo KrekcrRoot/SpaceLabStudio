@@ -12,17 +12,19 @@ namespace SpaceLab::ui {
     class Object : public Sprite {
 
     public:
-        virtual void render(Renderer* renderer) = 0;
-        void draw(Renderer* renderer) override;
-        void drawOutline(Renderer* renderer) const;
+        virtual void render(render::Renderer* renderer) = 0;
+        void draw(render::Renderer* renderer) override;
+        void drawOutline(render::Renderer* renderer) const;
         void update(float deltaTime) override;
 
         [[nodiscard]] bool hit(const glm::vec2& pos) const override;
         void hover() override;
+        void drop() override;
         void leave() override;
         void drag(const glm::vec2& delta) override;
+
+        bool hovering() override;
         bool dragging() override;
-        void drop() override;
 
         //borders
         [[nodiscard]] float left() const;

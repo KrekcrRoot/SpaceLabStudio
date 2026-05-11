@@ -5,12 +5,13 @@
 #ifndef SPACELABSTUDIO_RENDERER_H
 #define SPACELABSTUDIO_RENDERER_H
 
+#include "font/Font.h"
 #include <math/objects/Vectors.h>
 #include <glm/glm.hpp>
 
 using namespace math;
 
-namespace SpaceLab {
+namespace SpaceLab::render {
     class Renderer {
     public:
 
@@ -24,6 +25,9 @@ namespace SpaceLab {
         virtual void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color) = 0;
         virtual void drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color, float alpha) = 0;
         virtual void drawGradientLine(Vector4<float> pos, Vector4<float> fromColor, Vector4<float> toColor) = 0;
+
+        // Text Rendering
+        virtual void drawString(const font::Font& font, const std::string& str, Vector2<float> pos) = 0;
 
         virtual void init(void *nativeWindow) = 0;
 

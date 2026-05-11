@@ -14,7 +14,7 @@ namespace SpaceLab::ui {
 
     public:
         NumberObject(const glm::vec2& pos, float length);
-        void render(Renderer* renderer) override;
+        void render(render::Renderer* renderer) override;
 
     };
 }

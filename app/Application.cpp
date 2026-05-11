@@ -12,8 +12,8 @@ namespace SpaceLab {
     using clock = std::chrono::high_resolution_clock;
 
     Application::Application() {
-        m_renderer = new OpenGLRenderer();
-        m_camera = new Camera(1280, 720);
+        m_renderer = new render::OpenGLRenderer();
+        m_camera = new render::Camera(1280, 720);
 
         m_window = new Window{1280, 720, "SpaceLab Studio"};
         m_renderer->init(m_window->getNativeHandle());
@@ -34,10 +34,16 @@ namespace SpaceLab {
 
     void Application::run() {
 
+        render::font::Font myFont;
+        myFont.load("assets/fonts/Roboto-Regular.ttf", 24.0f);
+
         auto* handler = (GLFWwindow*) m_window->getNativeHandle();
         glfwSetScrollCallback(handler, scrollCallback);
 
         glfwSetWindowUserPointer(handler, this);
+
+        GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CURSOR_NORMAL);
+        GLFWcursor* crosshairCursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 
         auto lastTime = clock::now();
 
@@ -76,17 +82,23 @@ namespace SpaceLab {
                 }
 
                 if(object->hit(worldPos)) {
-                    if(!m_dragging) object->hover();
+                    if(!m_dragging) {
+                        glfwSetCursor(handler, crosshairCursor);
+                        object->hover();
+                    }
 
                     if(m_leftBtnDown && !m_dragging) {
                         object->drag(worldPos);
                         m_dragging = true;
                     }
-                }else{
+                }else if(object->hovering()){
                     object->leave();
+                    glfwSetCursor(handler, cursor);
                 }
                 object->draw(m_renderer);
             }
+
+            m_renderer->drawString(myFont, "Hello, SpaceLab!", {10.f, 10.f});
 
             m_renderer->endFrame();
 
@@ -123,12 +135,6 @@ namespace SpaceLab {
 
         bool leftDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
-//        if(leftDown && !m_leftBtnDown) {
-//            double mx, my;
-//            glfwGetCursorPos(window, &mx, &my);
-//            auto worldPos = m_camera->screenToWorld(float(mx), float(my));
-//            m_camera->setTargetPosition(worldPos);
-//        }
 
         if(leftDown && m_leftBtnDown) {
 

@@ -13,7 +13,7 @@ namespace SpaceLab::ui {
 
     public:
         explicit SquareObject(int i);
-        void draw(Renderer* renderer) override;
+        void draw(render::Renderer* renderer) override;
         ~SquareObject() override;
 
         [[nodiscard]] bool hit(const glm::vec2& pos) const override;

@@ -27,7 +27,6 @@ namespace SpaceLab::ui {
 
         if(!m_dragging) {
             m_hitPos = pos - m_position;
-            std::cout << m_hitPos.x << " " << m_hitPos.y << "\n";
             m_dragging = true;
         }
 
@@ -41,6 +40,10 @@ namespace SpaceLab::ui {
 
     bool Object::dragging() {
         return m_dragging;
+    }
+
+    bool Object::hovering() {
+        return m_hover;
     }
 
     float Object::left() const {
@@ -59,7 +62,7 @@ namespace SpaceLab::ui {
         return m_position.y;
     }
 
-    void Object::draw(SpaceLab::Renderer *renderer) {
+    void Object::draw(render::Renderer *renderer) {
 
         if(m_outlineAlpha > 0) {
             drawOutline(renderer);
@@ -80,7 +83,7 @@ namespace SpaceLab::ui {
         }
     }
 
-    void Object::drawOutline(Renderer* renderer) const {
+    void Object::drawOutline(render::Renderer* renderer) const {
 
         Vector4<float> color = {1.f, 1.f, 1.f, m_outlineAlpha};
 

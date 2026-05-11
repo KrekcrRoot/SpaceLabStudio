@@ -12,7 +12,7 @@ namespace SpaceLab::ui {
         m_height = length;
     }
 
-    void NumberObject::render(Renderer* renderer) {
+    void NumberObject::render(render::Renderer* renderer) {
 
         renderer->drawLine(
             {m_position.x, m_position.y},

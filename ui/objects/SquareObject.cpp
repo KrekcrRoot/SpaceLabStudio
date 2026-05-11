@@ -8,7 +8,7 @@ namespace SpaceLab::ui {
 
     SquareObject::SquareObject(int i) :delta(i * 7) {}
 
-    void SquareObject::draw(SpaceLab::Renderer *renderer) {
+    void SquareObject::draw(render::Renderer *renderer) {
 
         renderer->drawLine({0 + float(delta * 10), float(delta * 10)}, {0 + float(delta * 10), 50 + float(delta * 10)});
         renderer->drawLine({0 + float(delta * 10), 50 + float(delta * 10)}, {50 + float(delta * 10), 50 + float(delta * 10)});
