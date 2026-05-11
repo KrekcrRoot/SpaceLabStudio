@@ -10,7 +10,7 @@ namespace SpaceLab::ui {
 
     void InfiniteGrid::render(SpaceLab::Renderer *renderer, Camera* camera) {
 
-        float cell = 30.f;
+        float cell = 50.f;
 
         float x = floor(camera->left() / cell) * cell;
         float y = floor(camera->top() / cell) * cell;

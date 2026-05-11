@@ -35,6 +35,9 @@ namespace SpaceLab {
     void Application::run() {
 
         auto* handler = (GLFWwindow*) m_window->getNativeHandle();
+        glfwSetScrollCallback(handler, scrollCallback);
+
+        glfwSetWindowUserPointer(handler, this);
 
         auto lastTime = clock::now();
 
@@ -57,15 +60,27 @@ namespace SpaceLab {
             glfwGetCursorPos(handler, &m_cursorPos.x, &m_cursorPos.y);
             auto worldPos = m_camera->screenToWorld(float(m_cursorPos.x), float(m_cursorPos.y));
 
+            m_lastCursorPos = m_cursorPos;
+
             for(const auto object : m_objects) {
 
                 object->update(float(dt));
 
-                if(object->hit(worldPos)) {
-                    object->hover();
+                if(object->dragging() && m_dragging) {
+                    object->drag(worldPos);
+                }
 
-                    if(m_leftBtnDown) {
-                        object->drag();
+                if(object->dragging() && !m_leftBtnDown) {
+                    object->drop();
+                    m_dragging = false;
+                }
+
+                if(object->hit(worldPos)) {
+                    if(!m_dragging) object->hover();
+
+                    if(m_leftBtnDown && !m_dragging) {
+                        object->drag(worldPos);
+                        m_dragging = true;
                     }
                 }else{
                     object->leave();
@@ -79,6 +94,13 @@ namespace SpaceLab {
             glfwPollEvents();
         }
 
+
+    }
+
+    void Application::scrollCallback(GLFWwindow* window, double x, double y) {
+
+        auto* app = reinterpret_cast<Application*> (glfwGetWindowUserPointer(window));
+        app->m_camera->zoom((float) y);
 
     }
 
@@ -101,12 +123,12 @@ namespace SpaceLab {
 
         bool leftDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
-        if(leftDown && !m_leftBtnDown) {
-            double mx, my;
-            glfwGetCursorPos(window, &mx, &my);
-            auto worldPos = m_camera->screenToWorld(float(mx), float(my));
-            m_camera->setTargetPosition(worldPos);
-        }
+//        if(leftDown && !m_leftBtnDown) {
+//            double mx, my;
+//            glfwGetCursorPos(window, &mx, &my);
+//            auto worldPos = m_camera->screenToWorld(float(mx), float(my));
+//            m_camera->setTargetPosition(worldPos);
+//        }
 
         if(leftDown && m_leftBtnDown) {
 

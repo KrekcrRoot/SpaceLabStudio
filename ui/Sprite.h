@@ -19,9 +19,11 @@ namespace SpaceLab::ui {
         virtual void update(float deltaTime) = 0;
         virtual void hover() = 0;
         virtual void leave() = 0;
-        virtual void drag() = 0;
+        virtual void drag(const glm::vec2& delta) = 0;
+        virtual void drop() = 0;
+        virtual bool dragging() = 0;
 
-        bool m_drag = false;
+        bool m_dragging = false;
         bool m_hover = false;
 
     private:

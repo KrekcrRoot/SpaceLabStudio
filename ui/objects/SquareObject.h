@@ -20,7 +20,7 @@ namespace SpaceLab::ui {
 
         void hover() override;
         void leave() override;
-        void drag() override;
+        void drag(const glm::vec2& delta) override;
 
     private:
         int delta;

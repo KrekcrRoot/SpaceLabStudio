@@ -24,7 +24,6 @@ namespace SpaceLab {
 
     void Camera::setTargetPosition(const glm::vec2 &pos) {
         m_targetPosition = pos;
-//        m_position = pos;
     }
 
     glm::mat4 Camera::getProjectionMatrix() const {
@@ -35,6 +34,16 @@ namespace SpaceLab {
                           m_position.y - halfH, m_position.y + halfH);
     }
 
+    void Camera::zoom(float delta) {
+        m_targetZoom += delta * 0.1f;
+
+        if(m_targetZoom > 10)
+            m_targetZoom = 10;
+
+        if(m_targetZoom < 0)
+            m_targetZoom = 0.1f;
+    }
+
     void Camera::push(float x, float y) {
         float speed = 3.f;
         m_targetPosition += glm::vec2(x * speed, y * speed);
@@ -43,6 +52,7 @@ namespace SpaceLab {
     void Camera::update(float deltaTime) {
         float lerpFactor = 1.0f - std::exp(-m_smoothness * deltaTime);
         m_position = glm::mix(m_position, m_targetPosition, lerpFactor);
+        m_zoom = glm::mix(m_zoom, m_targetZoom, lerpFactor);
     }
 
 

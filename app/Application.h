@@ -22,7 +22,9 @@ namespace SpaceLab {
 
     private:
         bool m_leftBtnDown = false;
+        bool m_dragging = false;
         void handleInput();
+        static void scrollCallback(GLFWwindow* window, double x, double y);
 
         Camera      *m_camera;
         Renderer    *m_renderer;
@@ -30,6 +32,7 @@ namespace SpaceLab {
 
         std::vector<ui::Sprite*> m_objects;
         glm::vec<2, double> m_cursorPos;
+        glm::vec<2, double> m_lastCursorPos;
 
         // workspace
         ui::InfiniteGrid m_infiniteGrid;

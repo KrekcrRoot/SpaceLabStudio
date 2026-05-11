@@ -18,7 +18,7 @@ namespace SpaceLab::ui {
         float outline = 5;
         Vector3<float> outlineColor = {0.f, 0.7f, 0.f};
 
-        if(m_hover && !m_drag) {
+        if(m_hover) {
             renderer->drawLine(
                 {-outline + float(delta * 10), -outline + float(delta * 10)},
                 {-outline + float(delta * 10), outline + 50 + float(delta * 10)},
@@ -69,8 +69,8 @@ namespace SpaceLab::ui {
         m_hover = false;
     }
 
-    void SquareObject::drag() {
-        m_drag = true;
+    void SquareObject::drag(const glm::vec2& _delta) {
+//        m_drag = true;
     }
 
 } // SpaceLab

@@ -15,21 +15,21 @@ namespace SpaceLab::ui {
         virtual void render(Renderer* renderer) = 0;
         void draw(Renderer* renderer) override;
         void drawOutline(Renderer* renderer) const;
-        void update(float deltaTime);
+        void update(float deltaTime) override;
 
         [[nodiscard]] bool hit(const glm::vec2& pos) const override;
         void hover() override;
         void leave() override;
-        void drag() override;
-
+        void drag(const glm::vec2& delta) override;
+        bool dragging() override;
+        void drop() override;
 
     protected:
         glm::vec2 m_position {};
         float m_width{}, m_height{};
 
-
         float m_outline = 5.f;
-        float m_outlineFade = 30.f;
+        float m_outlineFade = 3.f;
         float m_outlineAlpha = 0.f;
         float m_outlineAlphaTarget = 0.f;
 
