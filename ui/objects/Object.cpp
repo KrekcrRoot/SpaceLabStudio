@@ -23,11 +23,15 @@ namespace SpaceLab::ui {
         m_outlineAlphaTarget = 0.f;
     }
 
-    void Object::drag(const glm::vec2& delta) {
+    void Object::drag(const glm::vec2& pos) {
 
-        m_position = delta - glm::vec2{m_width / 2, m_height / 2};
-        m_dragging = true;
-        //        std::cout << delta.x << " " << delta.y << "\n";
+        if(!m_dragging) {
+            m_hitPos = pos - m_position;
+            std::cout << m_hitPos.x << " " << m_hitPos.y << "\n";
+            m_dragging = true;
+        }
+
+        m_position = pos - m_hitPos;
 
     }
 
@@ -37,6 +41,22 @@ namespace SpaceLab::ui {
 
     bool Object::dragging() {
         return m_dragging;
+    }
+
+    float Object::left() const {
+        return m_position.x;
+    }
+
+    float Object::right() const {
+        return m_position.x + m_width;
+    }
+
+    float Object::top() const {
+        return m_position.y + m_height;
+    }
+
+    float Object::bottom() const {
+        return m_position.y;
     }
 
     void Object::draw(SpaceLab::Renderer *renderer) {

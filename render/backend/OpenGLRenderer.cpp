@@ -183,7 +183,8 @@ namespace SpaceLab {
 
     void OpenGLRenderer::beginFrame() {
 
-        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.063,0.086,0.110, 1.f);
+//        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         m_lineVertexBuffer.clear();

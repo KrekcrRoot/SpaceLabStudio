@@ -13,9 +13,13 @@ namespace SpaceLab::ui {
     class InfiniteGrid {
 
     public:
+        InfiniteGrid();
         void render(Renderer* renderer, Camera* camera);
 
     private:
+
+        const Vector3<float> gridColor = {0.118,0.180,0.212};
+        Vector3<float> backgroundColor = {0.063,0.086,0.110};
 
     };
 

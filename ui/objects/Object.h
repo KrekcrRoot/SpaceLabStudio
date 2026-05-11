@@ -24,8 +24,17 @@ namespace SpaceLab::ui {
         bool dragging() override;
         void drop() override;
 
+        //borders
+        [[nodiscard]] float left() const;
+        [[nodiscard]] float right() const;
+        [[nodiscard]] float top() const;
+        [[nodiscard]] float bottom() const;
+
+
+
     protected:
         glm::vec2 m_position {};
+        glm::vec2 m_hitPos {};
         float m_width{}, m_height{};
 
         float m_outline = 5.f;
