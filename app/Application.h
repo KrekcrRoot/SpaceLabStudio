@@ -9,8 +9,9 @@
 #include <Renderer.h>
 #include <Camera.h>
 #include <Window.h>
+#include <widgets/widgets.h>
 #include <workspace/InfiniteGrid.h>
-#include <Sprite.h>
+#include <objects/Object.h>
 #include <map>
 
 namespace SpaceLab {
@@ -36,7 +37,9 @@ namespace SpaceLab {
         render::Renderer    *m_renderer;
         Window      *m_window;
 
-        std::vector<ui::Sprite*> m_objects;
+
+        ui::WidgetManager* m_widgetManager;
+        std::vector<ui::Object*> m_objects;
         glm::vec<2, double> m_cursorPos {};
         glm::vec<2, double> m_lastCursorPos {};
 

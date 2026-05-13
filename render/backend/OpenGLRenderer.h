@@ -35,6 +35,9 @@ namespace SpaceLab::render {
         void beginFrame() override;
         void endFrame() override;
 
+        void beginUI() override;
+        void endUI() override;
+
     private:
         void flush() override;
         void setupShaders();

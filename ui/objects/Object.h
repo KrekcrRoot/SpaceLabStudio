@@ -5,9 +5,12 @@
 #ifndef SPACELABSTUDIO_OBJECT_H
 #define SPACELABSTUDIO_OBJECT_H
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include <Sprite.h>
 
 namespace SpaceLab::ui {
+
 
     class Object : public Sprite {
 
@@ -26,6 +29,10 @@ namespace SpaceLab::ui {
         bool hovering() override;
         bool dragging() override;
 
+        GLFWcursor* cursor() {
+            return m_cursor;
+        }
+
         //borders
         [[nodiscard]] float left() const;
         [[nodiscard]] float right() const;
@@ -43,6 +50,8 @@ namespace SpaceLab::ui {
         float m_outlineFade = 3.f;
         float m_outlineAlpha = 0.f;
         float m_outlineAlphaTarget = 0.f;
+
+        GLFWcursor* m_cursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
 
 
     };

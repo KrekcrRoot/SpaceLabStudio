@@ -14,6 +14,7 @@ namespace SpaceLab::ui {
 
     public:
         TextObject(render::font::Font *font, std::string str);
+        TextObject(render::font::Font *font, std::string str, Vector2<float> pos);
         void render(render::Renderer* renderer) override;
 
     private:

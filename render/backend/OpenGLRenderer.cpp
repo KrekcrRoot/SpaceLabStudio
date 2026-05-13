@@ -267,6 +267,16 @@ namespace SpaceLab::render {
         flushText();
     }
 
+    void OpenGLRenderer::beginUI() {
+        endFrame();
+        setViewProjection(glm::ortho(0, m_width, 0, m_height));
+    }
+
+    void OpenGLRenderer::endUI() {
+        flush();
+        flushText();
+    }
+
     void OpenGLRenderer::flush() {
 
         if(m_lineVertexBuffer.empty()) return;

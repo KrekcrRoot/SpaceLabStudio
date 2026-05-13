@@ -3,10 +3,9 @@
 //
 
 #include "Application.h"
-#include <backend/OpenGLRenderer.h>
-#include <objects/NumberObject.h>
-#include <objects/TextObject.h>
 #include <GLFW/glfw3.h>
+#include <backend/OpenGLRenderer.h>
+#include <objects/objects.h>
 
 namespace SpaceLab {
 
@@ -20,16 +19,13 @@ namespace SpaceLab {
         m_window = new Window{1280, 720, "SpaceLab Studio"};
         m_renderer->init(m_window->getNativeHandle());
 
+        m_widgetManager = new ui::WidgetManager();
+
         loadFonts();
 
         m_objects.push_back(new ui::NumberObject({
             0, 0
         }, 100));
-
-        m_objects.push_back(new ui::TextObject{
-            m_fonts["default"],
-            "m_objects.push_back(new ui::TextObject(myFont, \"Some text\"));"
-        });
 
     }
 
@@ -55,6 +51,7 @@ namespace SpaceLab {
 
         GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CURSOR_NORMAL);
         GLFWcursor* crosshairCursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
+//        GLFWcursor* textCursor = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
 
         auto lastTime = clock::now();
 
@@ -94,7 +91,7 @@ namespace SpaceLab {
 
                 if(object->hit(worldPos)) {
                     if(!m_dragging) {
-                        glfwSetCursor(handler, crosshairCursor);
+                        glfwSetCursor(handler, object->cursor());
                         object->hover();
                     }
 
@@ -109,9 +106,9 @@ namespace SpaceLab {
                 object->draw(m_renderer);
             }
 
-//            m_renderer->drawString(myFont, "Hello, SpaceLab!", {10.f, 10.f});
-
             m_renderer->endFrame();
+
+
 
             glfwSwapBuffers(handler);
             glfwPollEvents();
@@ -146,6 +143,9 @@ namespace SpaceLab {
 
         bool leftDown = glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;
 
+        if(leftDown && !m_leftBtnDown && !m_dragging) {
+            auto pos = m_camera->screenToWorld(float(m_cursorPos.x), float(m_cursorPos.y));;
+        }
 
         if(leftDown && m_leftBtnDown) {
 
@@ -160,6 +160,7 @@ namespace SpaceLab {
         delete m_renderer;
         delete m_window;
         delete m_camera;
+        delete m_widgetManager;
 
         for(const auto& object : m_objects) {
             delete object;
@@ -168,9 +169,6 @@ namespace SpaceLab {
         for(const auto& [str, font] : m_fonts) {
             delete font;
         }
-//        for(const auto& [title, font] : m_fonts) {
-//            delete &font;
-//        }
     }
 
 }

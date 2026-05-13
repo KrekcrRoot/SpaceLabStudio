@@ -19,6 +19,10 @@ namespace SpaceLab::render {
 
         virtual void beginFrame() = 0;
         virtual void endFrame() = 0;
+
+        virtual void beginUI() = 0;
+        virtual void endUI() = 0;
+
         virtual void setViewProjection(glm::mat4 projectionMatrix) = 0;
 
         virtual void drawLine(Vector2<float> from, Vector2<float> to) = 0;
