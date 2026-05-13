@@ -6,6 +6,9 @@
 #include <backend/OpenGLRenderer.h>
 #include <objects/NumberObject.h>
 #include <GLFW/glfw3.h>
+#include <glad/glad.h>
+#include <thread>
+#include <vector>
 
 namespace SpaceLab {
 
@@ -30,14 +33,17 @@ namespace SpaceLab {
             200, 0
         }, 100));
 
+        auto* handler = (GLFWwindow*) m_window->getNativeHandle();
+
+        glfwSetWindowUserPointer(handler, this);
+
+        glfwSetKeyCallback(handler, keyCallback);
     }
 
     void Application::run() {
 
         auto* handler = (GLFWwindow*) m_window->getNativeHandle();
         glfwSetScrollCallback(handler, scrollCallback);
-
-        glfwSetWindowUserPointer(handler, this);
 
         auto lastTime = clock::now();
 
@@ -88,6 +94,9 @@ namespace SpaceLab {
                 object->draw(m_renderer);
             }
 
+            if (!lastLatexResult.empty() && !isRecognizing)
+
+
             m_renderer->endFrame();
 
             glfwSwapBuffers(handler);
@@ -136,6 +145,36 @@ namespace SpaceLab {
 
         m_leftBtnDown = leftDown;
 
+    }
+
+    void Application::keyCallback(GLFWwindow* window, int key, int /*scancode*/, int action, int /*mods*/)
+    {
+        if (key == GLFW_KEY_ENTER && action == GLFW_PRESS)
+        {
+            auto* app = reinterpret_cast<Application*>(glfwGetWindowUserPointer(window));
+            app->triggerRecognition();
+        }
+    }
+
+    void Application::triggerRecognition()
+    {
+        if (isRecognizing.exchange(true)) 
+        {
+            printf("[ML] Распознание... \n")
+            return;
+        }
+        lastLatexResult = "Распознаю...";
+    
+        vector<uint8_t> pixels(m_windowWidth * m_windowWidth * 4);
+        glReadPixels(0,0, m_windowWidth, m_windowHeight, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+        thread([this, pixels]()
+        {
+            string result = m_recognizer.recognize(pixels, m_windowWidth, m_windowHeight);
+            lastLatexResult = result;
+            isRecognizing = false;
+
+            printf("[ML] Результат: %s\n", result.c_str());
+        }).detach();
     }
 
     Application::~Application() {

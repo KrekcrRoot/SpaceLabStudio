@@ -20,7 +20,7 @@ add_subdirectory(app)
 add_subdirectory(platform)
 add_subdirectory(math)
 add_subdirectory(ui)
-
+add_subdirectory(ml)
 
 add_executable(SpaceLabStudio main.cpp third_party/glad/src/glad.c)
 
@@ -31,10 +31,17 @@ target_link_libraries(SpaceLabStudio
     glfw
     math
     ui
+    ml
 )
 
 target_include_directories(SpaceLabStudio PRIVATE
     third_party/glad/include
     third_party/glm
     third_party/stb
+)
+
+add_custom_command(TARGET SpaceLabStudio POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        ${CMAKE_SOURCE_DIR}/third_party/onnxruntime/lib/libonnxruntime.dylib
+        $<TARGET_FILE_DIR:SpaceLabStudio>
 )

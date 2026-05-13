@@ -1,0 +1,15 @@
+
+build/
+
+.DS_Store
+
+.vscode/
+
+# ONNX Runtime
+third_party/onnxruntime/
+libonnxruntime.dylib
+
+# nlohmann/json
+third_party/json/
+
+assets/models/*.onnx
