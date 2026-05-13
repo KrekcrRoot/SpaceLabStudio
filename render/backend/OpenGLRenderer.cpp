@@ -110,7 +110,7 @@ namespace SpaceLab::render {
     void OpenGLRenderer::drawString(const font::Font &font, const std::string &str, Vector2<float> pos) {
 
         GLuint fontTex = font.getTexture();
-        // Если текстура сменилась – сбрасываем старый батч
+
         if (fontTex != m_currentTexture) {
             flushText();
             m_currentTexture = fontTex;
@@ -120,9 +120,7 @@ namespace SpaceLab::render {
         font.buildString(str, pos, verts);
         if (verts.empty()) return;
 
-        // Просто добавляем в накопитель
         m_texVertices.insert(m_texVertices.end(), verts.begin(), verts.end());
-
 
     }
 }
@@ -254,7 +252,7 @@ namespace SpaceLab::render {
 
     void OpenGLRenderer::beginFrame() {
 
-        glClearColor(0.063,0.086,0.110, 1.f);
+        glClearColor(0.434, 0.476, 0.504, 1.f);
 //        glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 

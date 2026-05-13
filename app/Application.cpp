@@ -5,6 +5,7 @@
 #include "Application.h"
 #include <backend/OpenGLRenderer.h>
 #include <objects/NumberObject.h>
+#include <objects/TextObject.h>
 #include <GLFW/glfw3.h>
 
 namespace SpaceLab {
@@ -12,30 +13,40 @@ namespace SpaceLab {
     using clock = std::chrono::high_resolution_clock;
 
     Application::Application() {
+
         m_renderer = new render::OpenGLRenderer();
         m_camera = new render::Camera(1280, 720);
 
         m_window = new Window{1280, 720, "SpaceLab Studio"};
         m_renderer->init(m_window->getNativeHandle());
 
+        loadFonts();
+
         m_objects.push_back(new ui::NumberObject({
             0, 0
         }, 100));
 
-        m_objects.push_back(new ui::NumberObject({
-            -200, 0
-        }, 100));
+        m_objects.push_back(new ui::TextObject{
+            m_fonts["default"],
+            "m_objects.push_back(new ui::TextObject(myFont, \"Some text\"));"
+        });
 
-        m_objects.push_back(new ui::NumberObject({
-            200, 0
-        }, 100));
+    }
 
+    void Application::loadFonts() {
+        auto* defaultFont = new render::font::Font();
+        defaultFont->load("assets/fonts/Roboto-Regular.ttf", 24.f);
+
+        m_fonts["default"] = defaultFont;
+
+        auto* mathFont = new render::font::Font();
+        mathFont->load("assets/fonts/NotoSansMath-Regular.ttf", 24.f);
+
+        m_fonts["math"] = mathFont;
     }
 
     void Application::run() {
 
-        render::font::Font myFont;
-        myFont.load("assets/fonts/Roboto-Regular.ttf", 24.0f);
 
         auto* handler = (GLFWwindow*) m_window->getNativeHandle();
         glfwSetScrollCallback(handler, scrollCallback);
@@ -98,7 +109,7 @@ namespace SpaceLab {
                 object->draw(m_renderer);
             }
 
-            m_renderer->drawString(myFont, "Hello, SpaceLab!", {10.f, 10.f});
+//            m_renderer->drawString(myFont, "Hello, SpaceLab!", {10.f, 10.f});
 
             m_renderer->endFrame();
 
@@ -153,6 +164,13 @@ namespace SpaceLab {
         for(const auto& object : m_objects) {
             delete object;
         }
+
+        for(const auto& [str, font] : m_fonts) {
+            delete font;
+        }
+//        for(const auto& [title, font] : m_fonts) {
+//            delete &font;
+//        }
     }
 
 }

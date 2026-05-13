@@ -9,6 +9,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <unordered_map>
+#include <glm/glm.hpp>
 
 
 namespace SpaceLab::render::font {
@@ -28,6 +29,8 @@ namespace SpaceLab::render::font {
 
         bool load(const char* ttfPath, float fontSize);
         void buildString(const std::string& text, math::Vector2<float> pos, std::vector<float>& outVertices) const;
+        glm::vec2 measureString(const std::string& text) const;
+
 
         [[nodiscard]] GLuint getTexture() const;
         [[nodiscard]] float getFontSize() const;
@@ -38,6 +41,7 @@ namespace SpaceLab::render::font {
         int m_atlasWidth = 512, m_atlasHeight = 512;
         std::unordered_map<char, Glyph> m_glyphs;
         float m_ascent = 0;
+        float m_descent = 0;
 
     };
 

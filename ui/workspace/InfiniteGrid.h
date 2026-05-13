@@ -18,8 +18,13 @@ namespace SpaceLab::ui {
 
     private:
 
-        const Vector3<float> gridColor = {0.118,0.180,0.212};
-        Vector3<float> backgroundColor = {0.063,0.086,0.110};
+        // dark theme
+//        const Vector3<float> gridColor = {0.118,0.180,0.212};
+//        Vector3<float> backgroundColor = {0.063,0.086,0.110};
+
+        // light theme
+        const Vector3<float> gridColor = {0.434, 0.476, 0.504};
+        Vector3<float> backgroundColor = {0.434, 0.476, 0.504};
 
     };
 

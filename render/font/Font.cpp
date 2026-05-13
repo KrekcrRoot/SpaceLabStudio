@@ -47,6 +47,7 @@ namespace SpaceLab::render::font {
         int ascent, descent, lineGap;
         stbtt_GetFontVMetrics(&info, &ascent, &descent, &lineGap);
         m_ascent = (float) ascent * scale;
+        m_descent = (float) descent * scale;
 
         std::vector<unsigned char> atlas(m_atlasWidth * m_atlasHeight, 0);
         int x = 1, y = 1, rowHeight = 0;
@@ -130,8 +131,9 @@ namespace SpaceLab::render::font {
 
     void Font::buildString(const std::string& text, Vector2<float> pos, std::vector<float>& outVertices) const {
         outVertices.clear();
+
         float penX = pos.x;
-        float penY = pos.y + m_ascent;
+        float penY = pos.y;
 
         for (char c : text) {
             auto it = m_glyphs.find(c);
@@ -142,7 +144,7 @@ namespace SpaceLab::render::font {
 
             const Glyph& g = it->second;
             if (g.bw == 0.0f && g.bh == 0.0f) {
-                penX += g.ax;   // только сдвиг
+                penX += g.ax;
                 continue;
             }
             float x0 = penX + g.bl;
@@ -163,6 +165,19 @@ namespace SpaceLab::render::font {
             penX += g.ax;
         }
 
+    }
+
+    glm::vec2 Font::measureString(const std::string &text) const {
+        float width = 0.0f;
+        for (char c : text) {
+            auto it = m_glyphs.find(c);
+            if (it == m_glyphs.end()) it = m_glyphs.find('?');
+            if (it == m_glyphs.end()) continue;
+            width += it->second.ax;
+        }
+
+        float height = m_ascent - m_descent;
+        return {width, height};
     }
 
     GLuint Font::getTexture() const {
