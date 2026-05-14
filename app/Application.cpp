@@ -156,26 +156,27 @@ namespace SpaceLab {
         }
     }
 
-    void Application::triggerRecognition()
+    void Application::triggerRecognition() 
     {
-        if (isRecognizing.exchange(true)) 
-        {
-            printf("[ML] Распознание... \n")
-            return;
-        }
-        lastLatexResult = "Распознаю...";
-    
-        vector<uint8_t> pixels(m_windowWidth * m_windowWidth * 4);
-        glReadPixels(0,0, m_windowWidth, m_windowHeight, GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
-        thread([this, pixels]()
-        {
-            string result = m_recognizer.recognize(pixels, m_windowWidth, m_windowHeight);
-            lastLatexResult = result;
-            isRecognizing = false;
-
-            printf("[ML] Результат: %s\n", result.c_str());
-        }).detach();
+    if (isRecognizing.exchange(true)) {
+        printf("[ML] Уже идёт распознавание\n");
+        return;
     }
+
+    lastLatexResult = "Распознаю...";
+
+    std::vector<uint8_t> pixels(m_windowWidth * m_windowHeight * 4);
+    glReadPixels(0, 0, m_windowWidth, m_windowHeight,
+                 GL_RGBA, GL_UNSIGNED_BYTE, pixels.data());
+
+    std::thread([this, pixels]() {
+        std::string result = m_recognizer.recognize(
+            pixels, m_windowWidth, m_windowHeight);
+        lastLatexResult = result;
+        isRecognizing   = false;
+        printf("[ML] Результат: %s\n", result.c_str());
+    }).detach();
+}
 
     Application::~Application() {
         glfwTerminate();

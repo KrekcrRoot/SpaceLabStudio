@@ -11,7 +11,7 @@
 #include <workspace/InfiniteGrid.h>
 #include <Sprite.h>
 
-#include <ml/Recognizer.h>
+#include <Recognizer.h>
 #include <atomic>
 #include <thread>
 #include <string>
@@ -52,7 +52,7 @@ namespace SpaceLab {
         // workspace
         ui::InfiniteGrid m_infiniteGrid;
 
-        Recognizer m_recognizer{"assets/models"};
+        Recognizer m_recognizer{"/Users/alexmac/Desktop/KOLYAN/SpaceLabStudio/assets/models"};
 
         int m_windowWidth  = 1280;
         int m_windowHeight = 720;
