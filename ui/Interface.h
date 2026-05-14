@@ -12,13 +12,18 @@ namespace SpaceLab::ui {
 
     class Interface {
     public:
-        Interface() = default;
+        explicit Interface(FontManager* fontManager) :
+            m_mainLayer(fontManager), m_overlayLayer(fontManager), m_fontManager(fontManager)
+        {
+            setup();
+        }
 
         void setup();
         void draw(render::Renderer *renderer);
 
     private:
 
+        FontManager *m_fontManager;
         WidgetManager m_mainLayer;
         WidgetManager m_overlayLayer;
 

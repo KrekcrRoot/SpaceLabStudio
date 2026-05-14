@@ -9,7 +9,7 @@
 #include <Renderer.h>
 #include <Camera.h>
 #include <Window.h>
-#include <widgets/widgets.h>
+#include <Interface.h>
 #include <workspace/InfiniteGrid.h>
 #include <objects/Object.h>
 #include <map>
@@ -31,14 +31,14 @@ namespace SpaceLab {
 
         void loadFonts();
 
-        std::map<std::string, render::font::Font*> m_fonts;
+        ui::FontManager* m_fontManager;
 
         render::Camera      *m_camera;
         render::Renderer    *m_renderer;
         Window      *m_window;
 
 
-        ui::WidgetManager* m_widgetManager;
+        ui::Interface* m_interface;
         std::vector<ui::Object*> m_objects;
         glm::vec<2, double> m_cursorPos {};
         glm::vec<2, double> m_lastCursorPos {};

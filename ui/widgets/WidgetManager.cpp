@@ -6,7 +6,9 @@
 
 namespace SpaceLab::ui {
 
-    WidgetManager::WidgetManager() = default;
+    WidgetManager::WidgetManager(FontManager* fontManager)
+        : m_fontManager(fontManager)
+    {}
 
     WidgetManager::~WidgetManager() {
         m_widgets.clear();
@@ -29,7 +31,7 @@ namespace SpaceLab::ui {
 
     void WidgetManager::render(render::Renderer *renderer) {
         for(const auto& widget : m_widgets) {
-            widget->draw();
+            widget->draw(renderer);
         }
     }
 

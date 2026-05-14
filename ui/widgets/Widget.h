@@ -5,6 +5,7 @@
 #ifndef SPACELABSTUDIO_WIDGET_H
 #define SPACELABSTUDIO_WIDGET_H
 
+#include <Renderer.h>
 #include <glm/glm.hpp>
 
 namespace SpaceLab::ui {
@@ -17,7 +18,7 @@ namespace SpaceLab::ui {
         {};
         virtual ~Widget() = default;
 
-        virtual void draw() = 0;
+        virtual void draw(render::Renderer* renderer) = 0;
 
         [[nodiscard]] bool hit(const glm::vec2& pos) const {
             return pos.x >= m_position.x &&

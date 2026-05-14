@@ -81,7 +81,7 @@ namespace SpaceLab::render {
         this->drawRawLine({
             from.x, from.y,
             to.x, to.y
-        }, {r, g, b}, {r, g, b});
+        }, {r, g, b, 1.f}, {r, g, b, 1.f});
     }
 
     void OpenGLRenderer::drawLine(Vector2<float> from, Vector2<float> to, Vector3<float> color) {
@@ -268,8 +268,16 @@ namespace SpaceLab::render {
     }
 
     void OpenGLRenderer::beginUI() {
-        endFrame();
-        setViewProjection(glm::ortho(0, m_width, 0, m_height));
+
+        flush();
+        flushText();
+
+        m_lineVertexBuffer.clear();
+        m_texVertices.clear();
+        m_currentTexture = 0;
+
+        setViewProjection(glm::ortho(0.f, static_cast<float>(m_width),
+                                     0.f, static_cast<float>(m_height)));
     }
 
     void OpenGLRenderer::endUI() {

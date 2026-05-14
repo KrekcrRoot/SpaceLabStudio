@@ -6,6 +6,7 @@
 #define SPACELABSTUDIO_WIDGETMANAGER_H
 
 #include <Renderer.h>
+#include <FontManager.h>
 #include <widgets/Widget.h>
 #include <glm/glm.hpp>
 #include <vector>
@@ -14,7 +15,7 @@ namespace SpaceLab::ui {
     class WidgetManager {
 
     public:
-        WidgetManager();
+        explicit WidgetManager(FontManager* fontManager);
         ~WidgetManager();
 
         void addWidget(std::unique_ptr<Widget> widget);
@@ -26,6 +27,8 @@ namespace SpaceLab::ui {
 
     private:
         std::vector<std::unique_ptr<Widget>> m_widgets;
+        FontManager* m_fontManager;
+
 
     };
 } // SpaceLab

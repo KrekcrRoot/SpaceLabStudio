@@ -6,6 +6,8 @@
 #define SPACELABSTUDIO_WIDGETS_H
 
 #include <widgets/Widget.h>
+#include <widgets/TextWidget.h>
+
 #include <widgets/WidgetManager.h>
 
 #endif //SPACELABSTUDIO_WIDGETS_H

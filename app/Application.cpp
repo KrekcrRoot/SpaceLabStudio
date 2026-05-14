@@ -7,6 +7,7 @@
 #include <backend/OpenGLRenderer.h>
 #include <objects/objects.h>
 
+
 namespace SpaceLab {
 
     using clock = std::chrono::high_resolution_clock;
@@ -19,9 +20,9 @@ namespace SpaceLab {
         m_window = new Window{1280, 720, "SpaceLab Studio"};
         m_renderer->init(m_window->getNativeHandle());
 
-        m_widgetManager = new ui::WidgetManager();
-
         loadFonts();
+
+        m_interface = new ui::Interface(m_fontManager);
 
         m_objects.push_back(new ui::NumberObject({
             0, 0
@@ -30,15 +31,17 @@ namespace SpaceLab {
     }
 
     void Application::loadFonts() {
+        m_fontManager = new ui::FontManager();
+
         auto* defaultFont = new render::font::Font();
         defaultFont->load("assets/fonts/Roboto-Regular.ttf", 24.f);
 
-        m_fonts["default"] = defaultFont;
+        m_fontManager->addFont("default", defaultFont);
 
         auto* mathFont = new render::font::Font();
         mathFont->load("assets/fonts/NotoSansMath-Regular.ttf", 24.f);
 
-        m_fonts["math"] = mathFont;
+        m_fontManager->addFont("math", mathFont);
     }
 
     void Application::run() {
@@ -50,8 +53,6 @@ namespace SpaceLab {
         glfwSetWindowUserPointer(handler, this);
 
         GLFWcursor* cursor = glfwCreateStandardCursor(GLFW_CURSOR_NORMAL);
-        GLFWcursor* crosshairCursor = glfwCreateStandardCursor(GLFW_CROSSHAIR_CURSOR);
-//        GLFWcursor* textCursor = glfwCreateStandardCursor(GLFW_IBEAM_CURSOR);
 
         auto lastTime = clock::now();
 
@@ -105,10 +106,13 @@ namespace SpaceLab {
                 }
                 object->draw(m_renderer);
             }
+            
 
             m_renderer->endFrame();
 
-
+            m_renderer->beginUI();
+            m_interface->draw(m_renderer);
+            m_renderer->endUI();
 
             glfwSwapBuffers(handler);
             glfwPollEvents();
@@ -160,14 +164,11 @@ namespace SpaceLab {
         delete m_renderer;
         delete m_window;
         delete m_camera;
-        delete m_widgetManager;
+        delete m_interface;
+        delete m_fontManager;
 
         for(const auto& object : m_objects) {
             delete object;
-        }
-
-        for(const auto& [str, font] : m_fonts) {
-            delete font;
         }
     }
 
